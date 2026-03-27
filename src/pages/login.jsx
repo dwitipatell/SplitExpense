@@ -1,11 +1,31 @@
-//first page - user see
+import React from "react";
+import "../styles/Login.css";
 
-function Login() {
-    return (
-        <div>
-        <h2>Login Page</h2>
-        </div>
-    );
+export default function Login() {
+  return (
+    <div className="login-page">
+      <div className="login-box">
+        <h1 className="logo">SplitExpense</h1>
+        <p className="tagline">Split smart. Live better.</p>
+
+        <form className="form">
+          <div className="input-group">
+            <input type="email" required />
+            <label>Email</label>
+          </div>
+
+          <div className="input-group">
+            <input type="password" required />
+            <label>Password</label>
+          </div>
+
+          <button className="btn">Login</button>
+        </form>
+
+        <p className="bottom-text">
+          Don’t have an account? <span>Sign up</span>
+        </p>
+      </div>
+    </div>
+  );
 }
-
-export default Login
