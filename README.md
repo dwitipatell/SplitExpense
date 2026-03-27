@@ -1,19 +1,90 @@
-# React + Vite
+# 💸 SplitExpense
+This is the beta project of team Redstone Rebels
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SplitExpense is a modern web application designed to simplify and automate the management of shared expenses across individuals and groups.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Problem Statement
 
-## React Compiler
+In today’s collaborative environments—such as shared accommodations, travel groups, and team activities—managing shared expenses remains a fragmented and inefficient process. Individuals often depend on informal methods like manual calculations, chat records, or spreadsheets, which lack reliability, scalability, and real-time synchronization.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+These approaches frequently lead to calculation errors, lack of transparency, and unnecessary disputes over financial balances. Moreover, determining accurate settlements becomes cognitively demanding as the number of participants and transactions increases.
 
-## Expanding the ESLint configuration
+**SplitExpense addresses this challenge by delivering a structured, automated, and user-centric system that ensures precise expense distribution, real-time balance tracking, and seamless coordination of shared financial responsibilities.**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
 
-# SplitExpense
-this is the beta project of team Redstone Rebels
+## 🛠️ Tech Stack
+
+### 🎨 Frontend
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>React (with Vite)</li>
+</ul>
+
+### ⚙️ Backend
+<ul>
+  <li>Supabase (Backend-as-a-Service)</li>
+</ul>
+
+### 🗄️ Database
+<ul>
+  <li>PostgreSQL (via Supabase)</li>
+</ul>
+
+### 🧰 Tools & Platforms
+<ul>
+  <li>GitHub</li>
+  <li>VS Code</li>
+  <li>Figma (for UI/UX design)</li>
+</ul>
+
+---
+
+## 📂 Project Structure
+src/
+
+components/ → Reusable UI components
+<br>
+pages/ → Full application screens
+<br>
+utils/ → Core logic (expense splitting, calculations)
+<br>
+services/ → Backend/API communication
+<br>
+assets/ → Images, icons, styles
+
+App.jsx → Routing
+<br>
+main.jsx → Entry point
+
+---
+
+Architecture follows separation of concerns:
+
+- **components** → UI only  
+- **utils** → Business logic  
+- **services** → Backend communication  
+
+---
+
+## 📈 Future Scope
+
+- Advanced spending analytics  
+- AI-driven expense suggestions  
+- Multi-currency support  
+- Mobile application development  
+- Payment integration (UPI, cards)  
+
+---
+
+## 🎯 Conclusion
+
+SplitExpense transforms shared expense management into a transparent, accurate, and efficient process. By combining a clean frontend with a reliable backend system, it eliminates ambiguity and enhances financial collaboration among users.
+
+---
+
+Beta Project for Craftathon Hackathon  
+🔗 https://craftathon.gu-tech.org/
