@@ -1,95 +1,82 @@
 /* Background */
-.login-page {
+.signup-page {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
   background: linear-gradient(135deg, #0f172a, #1e293b);
   font-family: "Segoe UI", sans-serif;
 }
 
 /* Glass Card */
-.login-box {
-   width: 340px;
+.signup-box {
+  width: 360px;
   padding: 40px 30px;
   border-radius: 18px;
+
+  background: rgba(209, 232, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(209, 232, 255, 0.2);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   text-align: center;
-
-  /* ✨ Better glass look */
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.02)
-  );
-
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  /* 💎 Depth */
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1);
-
 }
 
-/* Logo */
-.logo {
-  color: #ffffff;
+/* Heading */
+.signup-box h2 {
+  color: #F8F3EA;
   margin-bottom: 5px;
 }
 
-.tagline {
-  color: #94a3b8;
+.signup-subtext {
+  color: #9ECCFA;
   font-size: 14px;
   margin-bottom: 25px;
-  padding-top: 34px;
 }
 
 /* Input group */
-.input-group {
+.signup-group {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-.input-group input {
+.signup-group input {
   width: 100%;
-  padding: 12px 10px;
+  padding: 12px 6px;
   border-radius: 8px;
   border: none;
   outline: none;
-
   background: rgba(255, 255, 255, 0.08);
-  color: white;
+  color: #F8F3EA;
 }
 
 /* Label */
-.input-group label {
+.signup-group label {
   position: absolute;
   left: 10px;
   top: 12px;
-  color: #94a3b8;
+  color: #9ECCFA;
   font-size: 14px;
   transition: 0.3s;
   pointer-events: none;
 }
 
 /* Floating label */
-.input-group input:focus + label,
-.input-group input:valid + label {
+.signup-group input:focus + label,
+.signup-group input:valid + label {
   top: -8px;
   font-size: 11px;
-  color: #38bdf8;
+  color: #D1E8FF;
 }
 
 /* Focus glow */
-.input-group input:focus {
-  box-shadow: 0 0 6px #38bdf8;
+.signup-group input:focus {
+  box-shadow: 0 0 8px #9ECCFA;
 }
 
-/* Button */
-.btn {
+/* Button*/
+.signup-btn {
   width: 100%;
   padding: 12px;
   border: none;
@@ -99,21 +86,40 @@
   color: #0B1957;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
-.btn:hover {
+.signup-btn:hover {
   background: linear-gradient(90deg, #38bdf8, #0ea5e9);
 }
 
 /* Footer */
-.bottom-text {
+.signup-footer {
   margin-top: 18px;
-  color: #94a3b8;
+  color: #9ECCFA;
   font-size: 13px;
 }
 
-.bottom-text span {
-  color: #38bdf8;
+.signup-footer span {
+  color: #F8F3EA;
   cursor: pointer;
+}
+
+/* Messages */
+.warning {
+  color: #facc15;
+  font-size: 12px;
+  text-align: left;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  text-align: left;
+}
+
+.hint {
+  color: #9ECCFA;
+  font-size: 11px;
+  text-align: left;
 }
