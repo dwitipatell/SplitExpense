@@ -1,6 +1,7 @@
 import {useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
+import { supabase } from "../services/supabase";
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -60,6 +61,16 @@ export default function Signup() {
         console.log("User:", form);
 
         navigate("/");
+    };
+
+    const handleGoogleSignup = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        });
+
+        if (error) {
+        console.log("Google error:", error.message);
+        }
     };
 
     return (
@@ -130,6 +141,16 @@ export default function Signup() {
             <button type="submit" className="signup-btn">
             Sign Up
             </button>
+
+            <div className="google-wrapper">
+                <button
+                    type="button"
+                    className="google-icon-btn"
+                    onClick={handleGoogleSignup}
+                    >
+                    <img src="/google_signup.png" alt="Google" />
+                </button>
+            </div>
         </form>
 
         <p className="signup-footer">

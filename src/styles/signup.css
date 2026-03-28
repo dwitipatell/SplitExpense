@@ -93,6 +93,43 @@
   background: linear-gradient(90deg, #38bdf8, #0ea5e9);
 }
 
+.google-icon-btn {
+  padding:0;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 999px;
+
+  width: auto;
+  margin-top: 12px;
+
+  box-shadow: none; 
+}
+
+.google-wrapper {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
+
+/* Google logo */
+.google-icon-btn img {
+  display: block;
+  width: 18opx;
+  height: auto;
+}
+
+/* Hover effect */
+.google-icon-btn:hover {
+  background: #f7f8f8;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transform: scale(1.03);
+}
+
 /* Footer */
 .signup-footer {
   margin-top: 18px;
