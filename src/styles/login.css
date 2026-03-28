@@ -10,16 +10,28 @@
 
 /* Glass Card */
 .login-box {
-  width: 340px;
+   width: 340px;
   padding: 40px 30px;
   border-radius: 18px;
-
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   text-align: center;
+
+  /* ✨ Better glass look */
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* 💎 Depth */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+
 }
 
 /* Logo */
