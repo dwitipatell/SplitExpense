@@ -8,10 +8,7 @@ import Login from "./pages/login"
 function App() {
 
   return (
-    <BrowserRouter>
-    
-        <Login></Login>
-    </BrowserRouter>
+     <Login></Login>
   )
 }
 export default App
