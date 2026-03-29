@@ -1,11 +1,5 @@
-// I've added a loading state and the redirection logic to send users to the dashboard upon a successful login
-
-
-
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
-import { supabase } from "../services/supabase";
+import React from "react";
+import "../styles/login.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -36,49 +30,28 @@ export default function Login() {
   }
 
   return (
-    <div className="login-page">
-      <div className="login-box">
+    <div className="login-container">
+      <div className="glass-card">
         <h1 className="logo">SplitExpense</h1>
         <p className="tagline">Split smart. Live better.</p>
 
-        <form className="form" onSubmit={handleLogin}>
+        <form className="login-form">
           <div className="input-group">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label>Email</label>
+            <input type="email" placeholder="Email" required />
           </div>
 
           <div className="input-group">
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label>Password</label>
+            <input type="password" placeholder="Password" required />
           </div>
 
-          {error && <p className="error-text">{error}</p>}
-
-          {/* Button shows "Loading..." and is disabled while checking */}
-          <button className="btn" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+          <button type="submit" className="login-btn">
+            Login
           </button>
-        </form>
 
-        <p className="bottom-text">
-          Don't have an account?{" "}
-          <span 
-            onClick={() => navigate("/signup")} 
-            style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
-          >
-            Sign up
-          </span>
-        </p>
+          <p className="extra">
+            Don’t have an account? <span>Sign up</span>
+          </p>
+        </form>
       </div>
     </div>
   );
