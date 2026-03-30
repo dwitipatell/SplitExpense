@@ -15,7 +15,7 @@ export default function Signup() {
     const [capsLock, setCapsLock] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [showPopup, setShowPopup] = useState(false); // 👈 added
+    const [showPopup, setShowPopup] = useState(false);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,7 +45,7 @@ export default function Signup() {
         setError("");
         setLoading(true);
 
-        const { error: supabaseError } = await supabase.auth.signUp({
+        const { data, error: supabaseError } = await supabase.auth.signUp({
             email: form.email,
             password: form.password,
             options: { data: { full_name: form.name } }
@@ -55,8 +55,13 @@ export default function Signup() {
 
         if (supabaseError) { setError(supabaseError.message); return; }
 
-        setShowPopup(true); // 👈 show popup instead of alert
-    };
+        if (data?.user?.identities?.length === 0) {
+            setError("An account with this email already exists. Please login.");
+            return;
+        }
+
+        setShowPopup(true);
+    }; // 👈 this was missing
 
     return (
         <div className="signup-page">
@@ -91,11 +96,10 @@ export default function Signup() {
 
                 <p className="signup-footer">
                     Already have an account?{" "}
-                    <span onClick={() => navigate("/")} style={{ cursor: "pointer",color:"#00bef3" }}>Login</span>
+                    <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>Login</span>
                 </p>
             </div>
 
-            {/* 👇 Elegant Popup */}
             {showPopup && (
                 <div className="popup-overlay">
                     <div className="popup-box">
