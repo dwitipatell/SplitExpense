@@ -1,4 +1,4 @@
-import {Routes , Route} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import Dashboard from './pages/dashboard'
 import Navbar from './components/navbar'
 import Login from "./pages/login"
@@ -13,4 +13,5 @@ function App() {
     </Routes>
   )
 }
+
 export default App

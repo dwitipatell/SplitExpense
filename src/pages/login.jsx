@@ -8,26 +8,24 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
-    setLoading(true); // Start loading
+    setLoading(true);
 
     const { data, error: supabaseError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false); // Stop loading
+    setLoading(false);
 
     if (supabaseError) {
       setError(supabaseError.message);
     } else {
-      console.log("Logged in!", data.user);
-      // Redirect to the dashboard page
-      navigate("/dashboard"); 
+      navigate("/dashboard");
     }
   }
 
@@ -39,30 +37,30 @@ export default function Login() {
 
         <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
+            <input type="email" placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required />
           </div>
 
-          <button type="submit" className="login-btn">
-            Login
+          <div className="input-group">
+            <input type="password" placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required />
+          </div>
+
+          {error && <p style={{color: "red"}}>{error}</p>}
+
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <p className="extra">
-            Don’t have an account? <span onClick={() => navigate("/signup")}>Sign up</span>
+            Don't have an account?{" "}
+            <span onClick={() => navigate("/signup")} style={{cursor: "pointer"}}>
+              Sign up
+            </span>
           </p>
         </form>
       </div>
