@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../services/supabase";
 import "../styles/login.css";
 
 export default function Login() {
@@ -35,13 +37,24 @@ export default function Login() {
         <h1 className="logo">SplitExpense</h1>
         <p className="tagline">Split smart. Live better.</p>
 
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
-            <input type="email" placeholder="Email" required />
-          </div>
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
 
-          <div className="input-group">
-            <input type="password" placeholder="Password" required />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
           </div>
 
           <button type="submit" className="login-btn">
@@ -49,7 +62,7 @@ export default function Login() {
           </button>
 
           <p className="extra">
-            Don’t have an account? <span>Sign up</span>
+            Don’t have an account? <span onClick={() => navigate("/signup")}>Sign up</span>
           </p>
         </form>
       </div>

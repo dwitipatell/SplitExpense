@@ -6,7 +6,11 @@ import Signup from "./pages/signup"
 
 function App() {
   return (
-     <Login></Login>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
   )
 }
 export default App

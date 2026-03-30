@@ -25,7 +25,7 @@ export default function Signup() {
     };
 
     const handleKey = (e) => {
-        setCapsLock(e.getModifierState("Capslock"));
+        setCapsLock(e.getModifierState("CapsLock"));
     };
 
     const validatePassword = (password) => {
