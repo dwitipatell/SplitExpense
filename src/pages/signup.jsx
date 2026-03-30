@@ -91,7 +91,7 @@ export default function Signup() {
 
                 <p className="signup-footer">
                     Already have an account?{" "}
-                    <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>Login</span>
+                    <span onClick={() => navigate("/")} style={{ cursor: "pointer",color:"#00bef3" }}>Login</span>
                 </p>
             </div>
 

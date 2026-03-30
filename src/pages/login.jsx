@@ -36,18 +36,23 @@ export default function Login() {
         <p className="tagline">Split smart. Live better.</p>
 
         <form className="login-form" onSubmit={handleLogin}>
-          <div className="input-group">
-            <input type="email" placeholder="Email"
+          <div className="login-group">
+            <input type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required />
+              required 
+            />
+            <label>Email</label>
+
           </div>
 
-          <div className="input-group">
-            <input type="password" placeholder="Password"
+          <div className="login-group">
+            <input type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required />
+              required 
+            />
+            <label>Password</label>
           </div>
 
           {error && <p style={{color: "red"}}>{error}</p>}
