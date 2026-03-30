@@ -39,7 +39,7 @@ export default function Dashboard() {
 
           <div className="card green">
             <h3>You Are Owed</h3>
-            <p>₹17000</p>
+            <p>₹18000</p>
           </div>
         </div>
 
