@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/dashboard.css";
+import { calculateGroupBalances, simplifyDebts } from "../utils/splitlogic";
 
 export default function Dashboard() {
   return (
