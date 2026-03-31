@@ -1,155 +1,157 @@
-/* Background */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f4f6f9;
+}
+
+/* Layout */
 .dashboard {
   display: flex;
-  height: 100vh;
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
-  font-family: 'Poppins', sans-serif;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Gradient blobs */
-.dashboard::before,
-.dashboard::after {
-  content: "";
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  filter: blur(100px);
-  z-index: 0;
-}
-
-.dashboard::before {
-  background: #fb6ec2;
-  top: 10%;
-  left: 10%;
-}
-
-.dashboard::after {
-  background: #7570fb;
-  bottom: 10%;
-  right: 10%;
 }
 
 /* Sidebar */
 .sidebar {
-  width: 220px;
-  padding: 30px 20px;
-  backdrop-filter: blur(15px);
-  background: rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  width: 70px;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 20px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
 }
 
-.sidebar .logo {
-  margin-bottom: 40px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 12px;
-  margin-bottom: 10px;
+.icon {
+  font-size: 20px;
+  padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.sidebar li:hover,
-.sidebar .active {
-  background: rgba(255, 255, 255, 0.2);
+.icon.active {
+  background: #e6f0ff;
 }
 
 /* Main */
 .main {
   flex: 1;
-  padding: 30px;
-  z-index: 1;
+  padding: 20px 30px;
 }
 
 /* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  align-items: center;
 }
 
-/* Cards */
-.cards {
+.user {
+  background: #ddd;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* Welcome */
+.welcome {
+  margin: 20px 0;
+}
+
+/* Content */
+.content {
   display: flex;
   gap: 20px;
-  margin-bottom: 30px;
 }
 
-.card {
-  flex: 1;
-  padding: 20px;
+/* Left */
+.left {
+  flex: 2;
+}
+
+/* Event Card */
+.event-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 15px;
   border-radius: 15px;
-
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-
-  transition: 0.3s;
+  margin-top: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card p {
-  font-size: 22px;
+.event-left .date {
+  background: #ff7a18;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
   font-weight: bold;
 }
 
-.card.red {
-  border-left: 5px solid #ff4d4d;
+.event-middle {
+  flex: 1;
+  margin-left: 15px;
 }
 
-.card.green {
-  border-left: 5px solid #00ff9f;
+.avatars span {
+  background: #ddd;
+  border-radius: 50%;
+  padding: 6px;
+  margin-right: 5px;
+  font-size: 12px;
 }
 
-/* Transactions */
-.transactions {
-  padding: 20px;
+/* Right */
+.event-right {
+  text-align: right;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.green {
+  background: #d4f8e8;
+}
+
+.blue {
+  background: #d6e4ff;
+}
+
+/* Right panel */
+.right {
+  flex: 1;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 12px;
+  background: #ff7a18;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Box */
+.box {
+  background: white;
+  padding: 15px;
   border-radius: 15px;
-
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
+  margin-top: 20px;
 }
 
-.transaction {
+.reminder, .pending {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-top: 10px;
 }
 
-/* Floating Button */
-.fab {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-
-  border: none;
-  font-size: 30px;
-
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+.reminder button {
+  background: #2d7df6;
   color: white;
-
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.fab:hover {
-  transform: scale(1.1);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
 }
