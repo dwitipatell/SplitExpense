@@ -1,7 +1,6 @@
 // 🔹 1. Equal split
 export function splitEqual(amount, people) {
-  const share = amount / people.length;
-
+const share = parseFloat((amount / people.length).toFixed(2));
   return people.map(person => ({
     name: person,
     owes: share
@@ -11,8 +10,7 @@ export function splitEqual(amount, people) {
 
 // 🔹 2. Split with payer (core logic)
 export function splitWithPayer(amount, people, paidBy) {
-  const share = amount / people.length;
-
+const share = parseFloat((amount / people.length).toFixed(2));
   return people.map(person => {
     if (person === paidBy) {
       return {
@@ -57,7 +55,7 @@ export function simplifyDebts(balances) {
     transactions.push({
       from: debtor.name,
       to: creditor.name,
-      amount: amount
+      amount: parseFloat(amount.toFixed(2))    
     });
 
     debtor.balance += amount;
@@ -70,15 +68,52 @@ export function simplifyDebts(balances) {
   return transactions;
 }
 
+// 🔥 4. Multiple expenses support
+export function calculateGroupBalances(expenses, people) {
+  const balances = {};
+
+  // Step 1: initialize
+  people.forEach(person => {
+    balances[person] = 0;
+  });
+
+  // Step 2: loop all expenses
+  expenses.forEach(expense => {
+    const amount = expense.amount;
+    const paidBy = expense.paidBy;
+
+    const share = amount / people.length;
+
+    people.forEach(person => {
+      if (person === paidBy) {
+        balances[person] += amount - share;
+      } else {
+        balances[person] -= share;
+      }
+    });
+  });
+
+  // Step 3: convert to array
+  return Object.keys(balances).map(name => ({
+    name: name,
+    balance: balances[name]
+  }));
+}
 
 // 🧪 TESTING
+// 🧪 TESTING MULTIPLE EXPENSES
 
 const people = ["A", "B", "C"];
-const amount = 900;
-const paidBy = "A";
 
-const balances = splitWithPayer(amount, people, paidBy);
-console.log("Balances:", balances);
+const expenses = [
+  { amount: 900, paidBy: "A" },
+  { amount: 300, paidBy: "B" }
+];
 
-const transactions = simplifyDebts(balances);
-console.log("Transactions:", transactions);
+// Step 1: group balances
+const groupBalances = calculateGroupBalances(expenses, people);
+console.log("Group Balances:", groupBalances);
+
+// Step 2: simplify
+const finalTransactions = simplifyDebts(groupBalances);
+console.log("Final Transactions:", finalTransactions);
