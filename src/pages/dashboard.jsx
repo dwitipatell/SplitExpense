@@ -79,7 +79,7 @@ export default function Dashboard() {
             <button className="add-btn">+ Add New Event</button>
 
             <div className="box">
-              <h4>Payment Reminders</h4>
+              <h4>Payment Reminders.</h4>
 
               <div className="reminder">
                 <p>You owe Shivam ₹1,250</p>
