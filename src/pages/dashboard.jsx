@@ -1,8 +1,24 @@
-import React from "react";
 import "../styles/dashboard.css";
 import { calculateGroupBalances, simplifyDebts } from "../utils/splitlogic";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Dashboard() {
+
+  const navigate = useNavigate();
+  const people = ["Dwiti", "Vishakha", "Daksh"];
+
+  const expenses = [
+    { amount: 900, paidBy: "Dwiti" },
+    { amount: 300, paidBy: "Vishakha" }
+  ];
+
+  const balances = calculateGroupBalances(expenses, people);
+  const transactions = simplifyDebts(balances);
+  const [eventName, setEventName] = useState("");
+  const [participants, setParticipants] = useState("");
+
   return (
     <div className="dashboard">
 
@@ -77,34 +93,37 @@ export default function Dashboard() {
           {/* RIGHT */}
           <div className="right">
 
-            <button className="add-btn">+ Add New Event</button>
+            <button 
+              className="add-btn"
+              onClick={() => navigate("/add-event")}
+            >
+              + Add New Event
+            </button>
 
-            <div className="box">
-              <h4>Payment Reminders.</h4>
+           <div className="box">
+              <h4>Payment Reminders</h4>
 
-              <div className="reminder">
-                <p>You owe Shivam ₹1,250</p>
-                <button>Pay Now</button>
-              </div>
-
-              <div className="reminder">
-                <p>You owe Rahul ₹750</p>
-                <button>Pay Now</button>
-              </div>
+              {transactions.map((t, index) => (
+                <div className="reminder" key={index}>
+                  <p>{t.from} pays {t.to} ₹{t.amount}</p>
+                  <button onClick={() => alert("Pay clicked")}>
+                    Pay Now
+                  </button>
+                </div>
+              ))}
             </div>
 
             <div className="box">
               <h4>Pending from Others</h4>
 
-              <div className="pending">
-                <p>Simran owes you</p>
-                <span>₹3,400</span>
-              </div>
-
-              <div className="pending">
-                <p>Pooja owes you</p>
-                <span>₹525</span>
-              </div>
+              {balances
+                .filter(person => person.balance > 0)
+                .map((person, index) => (
+                  <div className="pending" key={index}>
+                    <p>{person.name} should receive</p>
+                    <span>₹{person.balance}</span>
+                  </div>
+                ))}
             </div>
 
           </div>
