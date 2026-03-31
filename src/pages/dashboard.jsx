@@ -43,6 +43,24 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Events Section */}
+        <div className="events">
+          <h2>Your Events</h2>
+
+          <div className="event-card">
+            <h3>Messy Door</h3>
+            <p>Total: ₹2000</p>
+            <p>Status: Settling</p>
+          </div>
+
+          <div className="event-card">
+            <h3>Weekend Dinner</h3>
+            <p>Total: ₹4,200</p>
+            <p>Status: Ongoing</p>
+          </div>
+
+        </div>
+
         {/* Transactions */}
         <div className="transactions">
           <h2>Recent Activity</h2>
