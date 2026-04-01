@@ -1,10 +1,9 @@
 import { Routes, Route } from "react-router-dom"
 import Dashboard from './pages/dashboard'
-import Navbar from './components/navbar'
 import Login from "./pages/login"
 import Signup from "./pages/signup"
-import "./utils/splitlogic";
-import AddEvent from "./pages/addevent";
+import AddEvent from "./pages/addevent"
+import Settings from "./pages/settings"
 
 function App() {
   return (
@@ -13,6 +12,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/add-event" element={<AddEvent />} />
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   )
 }
