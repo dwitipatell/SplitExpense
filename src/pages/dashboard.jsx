@@ -1,83 +1,69 @@
 import "../styles/dashboard.css";
-import { calculateGroupBalances, simplifyDebts } from "../utils/splitlogic";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 import translations from "../utils/translations";
+import AddEvent from "./addevent";
 
-const INDIAN_LANGUAGES = [
-  "English", "Hindi", "Gujarati", "Marathi", "Bengali",
-  "Tamil", "Telugu", "Kannada", "Malayalam", "Punjabi", "Odia", "Urdu"
-];
+const INDIAN_LANGUAGES = ["English", "Hindi", "Gujarati", "Marathi", "Bengali", "Tamil", "Telugu", "Kannada", "Malayalam", "Punjabi", "Odia", "Urdu"];
+const AVATAR_COLORS = ["#FF7A18", "#38bdf8", "#00C9A7", "#ff4d4d", "#9C27B0", "#E91E63", "#FBBF24"];
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [user, setUser] = useState(null);
-  const [showProfile, setShowProfile] = useState(false);
+  
+  // Modals & Popups States
   const [showSettings, setShowSettings] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showAddEvent, setShowAddEvent] = useState(false);
+  
+  const [eventToEdit, setEventToEdit] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  
+  // Persistent Preferences
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "English");
-  const [newDisplayName, setNewDisplayName] = useState(() => localStorage.getItem("displayName") || "");
-  const [newInitial, setNewInitial] = useState(() => localStorage.getItem("displayInitial") || "");
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  
+  // Profile States
+  const [displayName, setDisplayName] = useState(() => localStorage.getItem("displayName") || "");
+  const [avatarInitial, setAvatarInitial] = useState(() => localStorage.getItem("avatarInitial") || "");
+  const [avatarColor, setAvatarColor] = useState(() => localStorage.getItem("avatarColor") || "#FF7A18");
+
+  // Temporary Edit States for Profile Popup
+  const [editName, setEditName] = useState("");
+  const [editInitial, setEditInitial] = useState("");
+  const [editColor, setEditColor] = useState("");
 
   const t = translations[language] || translations["English"];
 
-  const people = ["Dwiti", "Vishakha", "Daksh"];
-  const expenses = [
-    { amount: 900, paidBy: "Dwiti" },
-    { amount: 300, paidBy: "Vishakha" }
-  ];
+  const fetchEvents = async () => {
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (currentUser) {
+      setUser(currentUser);
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
 
-  const balances = calculateGroupBalances(expenses, people);
-  const transactions = simplifyDebts(balances);
+      if (!error && data) {
+        setEvents(data.map(e => ({
+          ...e,
+          people: JSON.parse(e.people || "[]"),
+          paid_by_parsed: JSON.parse(e.paid_by || "[]")
+        })));
+      }
+    }
+  };
+
+  useEffect(() => { fetchEvents(); }, []);
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser(user);
-        const { data, error } = await supabase
-          .from("events")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (!error && data) {
-          const parsed = data.map(e => ({
-            ...e,
-            people: JSON.parse(e.people || "[]")
-          }));
-          setEvents(parsed);
-        }
-      }
-    };
-    getUser();
-  }, []);
-
-  const getAvatarColor = () => {
-    const colors = ["#FF6B6B", "#FF7A18", "#6C63FF", "#00C9A7", "#F7971E", "#2196F3", "#E91E63", "#9C27B0"];
-    const name = user?.email || "U";
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
-  };
-
-  const getInitial = () => {
-    if (newInitial) return newInitial.toUpperCase();
-    const name = user?.user_metadata?.full_name || user?.email || "U";
-    return name.charAt(0).toUpperCase();
-  };
-
-  const getDisplayName = () => {
-    if (newDisplayName) return newDisplayName;
-    return user?.user_metadata?.full_name || user?.email || "User";
-  };
-
-  const handleSaveProfile = () => {
-    localStorage.setItem("displayName", newDisplayName);
-    localStorage.setItem("displayInitial", newInitial);
-    setShowProfile(false);
-  };
+    document.body.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
@@ -85,150 +71,283 @@ export default function Dashboard() {
     setShowLanguages(false);
   };
 
-  const handleDeleteEvent = async (eventId) => {
-    const confirmed = window.confirm(t.deleteConfirm);
-    if (!confirmed) return;
-    const { error } = await supabase.from("events").delete().eq("id", eventId);
-    if (!error) setEvents(events.filter(e => e.id !== eventId));
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    return (
+      <div className="date-display">
+        <span className="date-day">{day}</span>
+        <span className="date-month">{month}</span>
+      </div>
+    );
   };
+
+  const handleDeleteEvent = async (eventId, e) => {
+    e.stopPropagation();
+    if (!window.confirm("Delete this event?")) return;
+    
+    const { error } = await supabase.from("events").delete().eq("id", eventId);
+    if (!error) {
+      setEvents(events.filter(e => e.id !== eventId));
+      if (selectedEvent?.id === eventId) setSelectedEvent(null);
+    }
+  };
+
+  const handleEditEvent = (event, e) => {
+    e.stopPropagation();
+    setEventToEdit(event);
+    setShowAddEvent(true);
+  };
+
+  // --- Profile Logic ---
+  const getFallbackName = () => user?.email?.split('@')[0] || "User";
+  const actualName = displayName || getFallbackName();
+  const actualInitial = avatarInitial || actualName.charAt(0).toUpperCase();
+
+  const handleOpenProfile = () => {
+    setEditName(actualName);
+    setEditInitial(actualInitial);
+    setEditColor(avatarColor);
+    setShowProfile(true);
+  };
+
+  const handleSaveProfile = () => {
+    setDisplayName(editName);
+    setAvatarInitial(editInitial);
+    setAvatarColor(editColor);
+    
+    localStorage.setItem("displayName", editName);
+    localStorage.setItem("avatarInitial", editInitial);
+    localStorage.setItem("avatarColor", editColor);
+    
+    setShowProfile(false);
+  };
+
+  const myName = actualName;
 
   return (
     <div className="dashboard">
+      <AddEvent 
+        isOpen={showAddEvent} 
+        onClose={() => {
+          setShowAddEvent(false);
+          setEventToEdit(null);
+        }} 
+        refreshEvents={fetchEvents}
+        eventToEdit={eventToEdit}
+      />
 
       {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-top">
-          <div className="icon active" onClick={() => navigate("/dashboard")}>🏠</div>
-          <div className="icon" onClick={() => navigate("/dashboard")}>📄</div>
-          <div className="icon" onClick={() => navigate("/dashboard")}>👥</div>
-          <div className="icon" onClick={() => setShowSettings(!showSettings)}>⚙️</div>
+          <div className="icon active">🏠</div>
+          <div className="icon" onClick={() => setShowSettings(true)}>⚙️</div>
         </div>
         <div className="sidebar-bottom">
-          <div className="user-profile" onClick={() => setShowProfile(!showProfile)}>
-            <div className="user-avatar" style={{ background: getAvatarColor() }}>
-              {getInitial()}
+          <div className="user-profile" onClick={handleOpenProfile}>
+            <div className="user-avatar" style={{ background: avatarColor }}>
+              {actualInitial}
             </div>
-            <span className="user-name">{getDisplayName()}</span>
+            <span className="user-name">{actualName}</span>
           </div>
         </div>
       </div>
 
-      {/* Main */}
       <div className="main">
-        <div className="navbar">
-          <h2>{t.splitExpense}</h2>
-        </div>
+        <div className="navbar"><h2>SplitExpense</h2></div>
 
-        {/* Profile Dropdown */}
+        {/* Profile Edit Dropdown */}
         {showProfile && (
-          <div className="profile-dropdown">
-            <h4>{t.editProfile}</h4>
+          <div className="profile-dropdown highlight-box">
+            <h4 style={{marginBottom: "5px", color: "white"}}>Edit Profile</h4>
+            <p style={{fontSize: '12px', color: '#9ECCFA', marginBottom: '15px'}}>{user?.email}</p>
+            
             <div className="profile-field">
-              <label>{t.changeName}</label>
-              <input placeholder={t.changeName} value={newDisplayName} onChange={(e) => setNewDisplayName(e.target.value)} />
+              <label>Display Name</label>
+              <input 
+                value={editName} 
+                onChange={e => setEditName(e.target.value)} 
+                placeholder="Enter your name" 
+              />
             </div>
+
             <div className="profile-field">
-              <label>{t.changeLogoLetter}</label>
-              <input placeholder={t.changeLogoLetter} maxLength={1} value={newInitial} onChange={(e) => setNewInitial(e.target.value)} />
+              <label>Logo Initial</label>
+              <input 
+                value={editInitial} 
+                onChange={e => setEditInitial(e.target.value.toUpperCase())} 
+                maxLength={2} 
+                placeholder="e.g. D" 
+              />
             </div>
-            <button className="save-btn" onClick={handleSaveProfile}>{t.save}</button>
+
+            <div className="profile-field">
+              <label>Logo Color</label>
+              <div style={{display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap'}}>
+                {AVATAR_COLORS.map(color => (
+                  <div 
+                    key={color}
+                    onClick={() => setEditColor(color)}
+                    style={{
+                      width: '24px', height: '24px', borderRadius: '50%', background: color, 
+                      cursor: 'pointer', border: editColor === color ? '2px solid white' : '2px solid transparent',
+                      transition: '0.2s'
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+              <button className="save-btn" style={{background: 'transparent', border: '1px solid rgba(255,255,255,0.2)'}} onClick={() => setShowProfile(false)}>Cancel</button>
+              <button className="save-btn" onClick={handleSaveProfile}>Save</button>
+            </div>
           </div>
         )}
 
-        <h1 className="welcome">{t.welcome}, {getDisplayName()}!</h1>
-
         <div className="content">
           <div className="left">
-            <h3>{t.yourEvents}</h3>
-
-            {events.length === 0 && (
-              <p className="no-events">{t.noEvents}</p>
-            )}
-
-            {events.map((event, index) => (
-              <div className="event-card" key={index}>
-                <div className="event-left">
-                  <div className="date">{event.date}</div>
-                </div>
+            <h3>Active Events</h3>
+            {events.length === 0 && <p className="no-events">{t.noEvents || "No events yet"}</p>}
+            
+            {events.map((event) => (
+              <div className="event-card premium-card" key={event.id} onClick={() => setSelectedEvent(event)}>
+                <div className="event-left"><div className="date">{formatDate(event.date)}</div></div>
                 <div className="event-middle">
                   <h4>{event.event_name}</h4>
                   <p>{event.total_people} participants</p>
-                  <div className="avatars">
-                    {event.people.map((name, i) => (
-                      <span key={i}>{name.charAt(0).toUpperCase()}</span>
-                    ))}
-                  </div>
                 </div>
                 <div className="event-right">
                   <h3>₹{event.amount.toLocaleString()}</h3>
-                  <span className="status blue">{t.ongoing}</span>
+                  
+                  {/* NEW CLEAN EDIT BUTTON HERE */}
+                  <div className="event-actions">
+                    <button className="edit-btn-small" onClick={(e) => handleEditEvent(event, e)}>Edit</button>
+                    <button className="delete-btn" onClick={(e) => handleDeleteEvent(event.id, e)}>🗑️</button>
+                  </div>
+
                 </div>
-                <button className="delete-btn" onClick={() => handleDeleteEvent(event.id)} title="Delete event">🗑️</button>
               </div>
             ))}
           </div>
 
           <div className="right">
-            <button className="add-btn" onClick={() => navigate("/add-event")}>{t.addNewEvent}</button>
-
-            <div className="box">
-              <h4>{t.paymentReminders}</h4>
-              {transactions.map((t2, index) => (
-                <div className="reminder" key={index}>
-                  <p>{t2.from} {t.pays} {t2.to} ₹{t2.amount}</p>
-                  <button onClick={() => alert("Pay clicked")}>{t.payNow}</button>
-                </div>
-              ))}
+            <button className="add-btn" onClick={() => { setEventToEdit(null); setShowAddEvent(true); }}>+ Add New Event</button>
+            
+            <div className="glass-box">
+              <h4 className="box-title">Payment Reminders</h4>
+              <div className="list-container">
+                {events.map(event => {
+                  const share = event.amount / event.total_people;
+                  const myPaid = event.paid_by_parsed.find(p => p.name === myName)?.paid || 0;
+                  if (myPaid < share) {
+                    const bigPayer = event.paid_by_parsed.find(p => p.paid > share);
+                    return (
+                      <div className="elegant-card owe" key={event.id}>
+                        <div className="card-info">
+                          <p className="main-text">Pay <b>{bigPayer?.name || 'Group'}</b></p>
+                          <p className="sub-text">for {event.event_name}</p>
+                        </div>
+                        <div className="card-amount red">₹{Math.round(share - myPaid)}</div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
             </div>
 
-            <div className="box">
-              <h4>{t.pendingFromOthers}</h4>
-              {balances.filter(person => person.balance > 0).map((person, index) => (
-                <div className="pending" key={index}>
-                  <p>{person.name} {t.shouldReceive}</p>
-                  <span>₹{person.balance}</span>
-                </div>
-              ))}
+            <div className="glass-box">
+              <h4 className="box-title">Pending from Others</h4>
+              <div className="list-container">
+                {events.map(event => {
+                  const share = event.amount / event.total_people;
+                  const myPaid = event.paid_by_parsed.find(p => p.name === myName)?.paid || 0;
+                  if (myPaid > share) {
+                    return event.people.filter(p => p !== myName).map((person, idx) => {
+                      const personPaid = event.paid_by_parsed.find(pay => pay.name === person)?.paid || 0;
+                      const personOwes = share - personPaid;
+                      if (personOwes > 0) {
+                        return (
+                          <div className="elegant-card receive" key={`${event.id}-${idx}`}>
+                            <div className="card-info">
+                              <p className="main-text"><b>{person}</b> owes you</p>
+                              <p className="sub-text">from {event.event_name}</p>
+                            </div>
+                            <div className="card-amount green">₹{Math.round(personOwes)}</div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    });
+                  }
+                  return null;
+                })}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Settings Overlay */}
+      {selectedEvent && (
+        <div className="modal-overlay" onClick={() => setSelectedEvent(null)}>
+          <div className="settings-panel detail-box" onClick={e => e.stopPropagation()}>
+            <div className="settings-header">
+              <h3 style={{color: '#ff7a18'}}>{selectedEvent.event_name}</h3>
+              <button className="close-btn" onClick={() => setSelectedEvent(null)}>✕</button>
+            </div>
+            <div className="detail-content">
+              <div className="detail-row"><span>Total Amount:</span> <b>₹{selectedEvent.amount}</b></div>
+              <div className="detail-row"><span>Individual Share:</span> <b>₹{Math.round(selectedEvent.amount / selectedEvent.total_people)}</b></div>
+              <hr className="settings-divider" />
+              <p><b>Date:</b> {selectedEvent.date}</p>
+              <p><b>Group:</b> {selectedEvent.people.join(", ")}</p>
+              <p style={{marginTop: '10px'}}><b>Payers:</b></p>
+              {selectedEvent.paid_by_parsed.map((p, i) => (
+                <div key={i} className="detail-row"><span>{p.name}</span> <span>₹{p.paid}</span></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {showSettings && (
         <div className="settings-overlay" onClick={() => { setShowSettings(false); setShowLanguages(false); }}>
-          <div className="settings-panel" onClick={(e) => e.stopPropagation()}>
-            <h3>{t.settings}</h3>
+          <div className="settings-panel highlight-box" onClick={(e) => e.stopPropagation()}>
+            
+            <div className="settings-header">
+              <h3>{t.settings || "Settings"}</h3>
+              <button className="close-btn" onClick={() => setShowSettings(false)}>✕</button>
+            </div>
 
             <div className="settings-item" onClick={() => setShowLanguages(!showLanguages)}>
-              <div className="settings-left"><span>🌐</span><span>{t.changeLanguage}</span></div>
+              <div className="settings-left"><span>🌐</span><span>{t.changeLanguage || "Change Language"}</span></div>
               <span className="settings-arrow">{language} ›</span>
             </div>
 
             {showLanguages && (
               <div className="language-list">
                 {INDIAN_LANGUAGES.map((lang) => (
-                  <div
-                    key={lang}
-                    className={`language-item ${language === lang ? "selected" : ""}`}
-                    onClick={() => handleLanguageChange(lang)}
-                  >
+                  <div key={lang} className={`language-item ${language === lang ? "selected" : ""}`} onClick={() => handleLanguageChange(lang)}>
                     {lang} {language === lang && "✓"}
                   </div>
                 ))}
               </div>
             )}
 
-            <div className="settings-item" onClick={() => alert("support@splitexpense.com")}>
-              <div className="settings-left"><span>🎧</span><span>{t.contactCare}</span></div>
-              <span className="settings-arrow">›</span>
+            <div className="settings-item" onClick={() => setDarkMode(!darkMode)}>
+              <div className="settings-left"><span>{darkMode ? "☀️" : "🌙"}</span><span>Theme</span></div>
+              <div className={`toggle ${darkMode ? "on" : ""}`}><div className="toggle-circle"></div></div>
             </div>
 
             <hr className="settings-divider" />
 
             <div className="settings-item logout" onClick={async () => { await supabase.auth.signOut(); navigate("/"); }}>
-              <div className="settings-left"><span>🚪</span><span>{t.logout}</span></div>
+              <div className="settings-left"><span style={{color: '#ff4d4d'}}>🚪</span><span style={{color: '#ff4d4d'}}>{t.logout || "Logout"}</span></div>
             </div>
+
           </div>
         </div>
       )}
