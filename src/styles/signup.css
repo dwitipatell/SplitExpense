@@ -1,0 +1,237 @@
+/* Background */
+.signup-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Glass Card */
+.signup-box {
+  width: 360px;
+  padding: 40px 30px;
+  border-radius: 18px;
+
+  background: rgba(209, 232, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(209, 232, 255, 0.2);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* Heading */
+.signup-box h2 {
+  color: #F8F3EA;
+  margin-bottom: 5px;
+}
+
+.signup-subtext {
+  color: #9ECCFA;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Input group */
+.signup-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.signup-group input {
+  width: 100%;
+  padding: 12px 6px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #F8F3EA;
+}
+
+/* Label */
+.signup-group label {
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  color: #9ECCFA;
+  font-size: 14px;
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+/* Floating label */
+.signup-group input:focus + label,
+.signup-group input:valid + label {
+  top: -8px;
+  font-size: 11px;
+  color: #D1E8FF;
+}
+
+/* Focus glow */
+.signup-group input:focus {
+  box-shadow: 0 0 8px #9ECCFA;
+}
+
+/* Button*/
+.signup-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+
+  background: linear-gradient(90deg, #9ECCFA, #38bdf8);
+  color: #0B1957;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.signup-btn:hover {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.google-icon-btn {
+  padding:0;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 999px;
+
+  width: auto;
+  margin-top: 12px;
+
+  box-shadow: none; 
+}
+
+.google-wrapper {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
+
+/* Google logo */
+.google-icon-btn img {
+  display: block;
+  width: 18opx;
+  height: auto;
+}
+
+/* Hover effect */
+.google-icon-btn:hover {
+  background: #f7f8f8;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transform: scale(1.03);
+}
+
+/* Footer */
+.signup-footer {
+  margin-top: 18px;
+  color: #9ECCFA;
+  font-size: 13px;
+}
+
+.signup-footer span {
+  color: #F8F3EA;
+  cursor: pointer;
+}
+
+/* Messages */
+.warning {
+  color: #facc15;
+  font-size: 12px;
+  text-align: left;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  text-align: left;
+}
+
+.hint {
+  color: #9ECCFA;
+  font-size: 11px;
+  text-align: left;
+}
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Popup Box */
+.popup-box {
+  width: 320px;
+  padding: 36px 28px;
+  border-radius: 18px;
+  background: rgba(209, 232, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(209, 232, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: popIn 0.3s ease;
+}
+
+/* Icon */
+.popup-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* Heading */
+.popup-box h3 {
+  color: #F8F3EA;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* Text */
+.popup-box p {
+  color: #9ECCFA;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.popup-box strong {
+  color: #D1E8FF;
+}
+
+/* Button */
+.popup-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #9ECCFA, #38bdf8);
+  color: #0B1957;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.popup-btn:hover {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+
+/* Animation */
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
